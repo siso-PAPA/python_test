@@ -1,1 +1,135 @@
-import py
+import time
+from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
+import pause
+import pyperclip
+
+# 아이디와 패스워드를 여기에 입력
+ID = ""
+PW = ""
+URL = "https://www.foresttrip.go.kr/com/login.do?hmpgId=ID02030117&targetUrl=/indvz/main.do?hmpgId=ID02030117"
+
+# start_dt = '2023/03/03(금)'
+# end_dt = '2023/03/05(일)'
+
+start_dt = '2023/02/15(수)'
+end_dt = '2023/02/16(목)'
+
+now = datetime.now()
+
+# 브라우저 꺼짐 방지 옵션
+chrome_options = Options()
+chrome_options.add_experimental_option("detach", True)
+
+
+# executable_path 부분에 브라우저 드라이버 파일 경로를 입력
+driver = webdriver.Chrome(executable_path='/Users/zino_mac/Desktop/python39/chromedriver',options=chrome_options)
+wait = WebDriverWait(driver, 10)
+driver.get(URL)
+# time.sleep(5)
+
+# 로그인 함수
+# 아이디 창과 패스워드 입력 창을 찾아서 클릭할 수 있을때까지 기다린 다음 자동으로 입력을 합니다
+
+
+def login():
+
+    loginBtn = wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="mmberId"]'))).click()
+    id_box = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="mmberId"]')))
+    pw_box = driver.find_element(By.ID, "gnrlMmberPssrd")
+
+    id_box.send_keys(ID)
+    pw_box.send_keys(PW)
+
+    login = wait.until(EC.element_to_be_clickable(
+        (By.CLASS_NAME, "loginBtn"))).click()
+
+    time.sleep(0.5)
+
+
+def wait_booking():
+    while True:
+
+        try:
+            print("try")
+            more_info = wait.until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, '//*[@id="goodsClssCd"]')))
+            booking_btn = driver.find_element(By.XPATH,'//*[@id="goodsClssCd"]')
+        except:
+            driver.refresh()
+            print("refresh")
+            time.sleep(0.5)
+        if booking_btn != 0:
+            break
+
+    booking_btn.click()
+    time.sleep(0.2)
+    driver.find_element(By.XPATH, '//*[@id="goodsClssCd"]/option[4]').click()
+
+  ###날짜선택 전 야영데크 선택
+
+def get_calender():
+
+    calendar = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[class="resLabel t02"]')))
+    calendar.click()
+
+
+    month = wait.until(EC.element_to_be_clickable((By.NAME, start_dt)))
+    month.click()
+    day = wait.until(EC.element_to_be_clickable((By.NAME, end_dt)))
+    day.click()
+    time.sleep(0.2)
+
+    driver.find_element(By.CSS_SELECTOR,'[class="defBtn board"]').click()
+    time.sleep(0.2)
+    check = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[onclick="fn_goRsvt();return false;"]')))
+    check.click()
+
+# def deck_select():
+#     while True:
+#         try:
+#             # more_info = wait.until(
+#             #     EC.element_to_be_clickable(
+#             #         (By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]')))
+#             deck_btn = driver.find_element(By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]').click()
+#             print("없음")
+#         except:
+#             driver.find_element(By.CSS_SELECTOR, '[alt="제일마지막으로"]').click()
+#             time.sleep(0.5)
+#             deck_btn = driver.find_element(By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]').click()
+#         if deck_btn != 0:
+#             break
+
+def deck_select():
+    time.sleep(0.2)
+    try:
+        # more_info = WebDriverWait(driver,1).until(
+        #         EC.element_to_be_clickable(
+        #             (By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]')))
+        driver.find_element(By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]').click()
+    except:
+        driver.find_element(By.CSS_SELECTOR, '[alt="제일마지막으로"]').click()
+        time.sleep(0.5)
+        driver.find_element(By.CSS_SELECTOR, '[value="GID020301170200202002001000052"]').click()
+    driver.maximize_window()
+    driver.find_element(By.CSS_SELECTOR, '[id="atmtcRsrvtPrvntChrct"]').click()
+
+def main():
+    result = 0
+
+    login()
+    wait_booking()
+    get_calender()
+    deck_select()
+
+
+if __name__ == "__main__":
+    main()
