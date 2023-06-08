@@ -1,0 +1,149 @@
+#파이썬 표준라이브러리
+
+import os
+os.getcwd()
+
+os.chdir(r"d:\\Downloads\\python_Advance-main")
+os.listdir()
+
+os.listdir('c:\\Users\\')
+
+path = 'c:\\Users\\'
+file_ex = r'.png'
+file_list = os.listdir(path)
+
+file_list = []
+file_list
+
+
+
+for file in file_list:
+    filepath = path + '/' + file 
+    print(filepath)
+    
+
+[file for file in os.listdir(path) if file.endswith(file_ex)] # 한줄로 적기
+
+
+
+
+import shutil, os
+root_dir = r'C:\\Users\\poscouser\\desktop\\test_folder'
+
+os.mkdir(root_dir)
+
+
+shutil.copy(root_dir + '/' + 'test.txt', root_dir + '/' + 'test1.txt' )   # 메타데이터는 복사안함
+shutil.copy2(root_dir + '/' + 'test.txt', root_dir + '/' + 'test2.txt' )  # 메타데이터도 복사
+
+shutil.move(root_dir + '/' + 'test.txt', r'C:\\Users\\poscouser\\desktop' )  # 폴더 이동시키기
+
+shutil.copytree(root_dir, r'C:\Users\poscouser\desktop\test_folder2')  #동일한 파일을 한번에 다 복사시키기
+
+
+for file in os.listdir(root_dir): 
+    os.remove(root_dir + '/' + file)    #해당파일리스트 지우기
+os.rmdir(root_dir) #폴더 지우기
+
+
+target_dir = r'C:\Users\poscoedu\Desktop'
+
+import os
+file_list = os.listdir(target_dir)
+file_list
+
+for file in file_list:
+    if file.split('.')[-1] == 'xlsx':
+        shutil.copy2(target_dir + '/' + file, target+dir + '/' + 'test_folder2'+file)  # 파일 옮기기
+        
+
+import os
+forder_path = 'd:/downloads/'
+
+each_file_path_and_gen_time = []
+for each_file_name in os.listdir(forder_path):
+    print(each_file_name)
+    
+    
+from tqdm import tqdm
+import time
+
+for i in tqdm(range(100)):
+    time.sleep(0.5)
+    
+    
+#JSON 문자열을 딕셔너리로 변환하기
+  ## Java Script 형임.
+#JSON 문자열이 저장된 텍스트 파일을 읽어와 json_str변수에 저장
+
+import json
+
+a = {"명단":[{"이름":"홍길동","부서":"인사팀","직급":"과장","역할":"동호회 회장"},{"이름":"이순신","부서":"구매팀","직급":"대리","역할":"동호회 총무"}],"메타데이터":{"데이터 설명":"사내 파이썬 동호회 회원명단","등록일":"2022-01-18","수정일":"2022-01-20","등록자":"김두환"}}
+
+path = r'D:\Downloads\python_Advance-main\data_set'
+path
+
+json_str = open(f'{path}\json_str_sample.txt', 'r' , encoding='utf-8')
+json_str
+
+
+type(json_str)
+
+json_obj = json.loads(json_str)
+
+data = {"모임명":"파이썬 동호호회", "명단":['홍길동','김철수','이영희']}
+data
+
+data_to_json = json.dumps(data, ensure_ascii=False)
+type(data_to_json)
+
+open(f'{path}\json_str_sample.txt', 'w' , encoding='utf-8').write(data_to_json)
+
+
+x = input()
+x = input("몇번이나 반복하시겠습니까")
+for i in range(int(x)):
+    print(i)
+
+
+import pyautogui as pg
+
+x = pg.prompt(title='반복 입력 횟수', text='몇번이나 반복하시겠습니까?')
+num = pg.confirm(title='확인', text='정말로 실행하시겠습니까?', buttons=['Ok','cancel'])
+
+## Click한 정보가 리턴됨(confirm은 선택하는 박스임.)
+
+pg.alert(title = '알림', text='실행이 완료되었습니다', button = 'ok')
+pg.password(title='암호', text ='암호를 입력하세요', mask = '$')
+
+
+import info
+for i in range(info.a):
+    print(i)
+    
+from pyperclip import *
+import clipboard
+
+clipboard.copy('안녕')
+
+sentence = 'When you have faults, do not fear to abandon them.'
+print(sentence.split(','))
+
+print(sentence[-5])
+
+sentence = 'I visited UK from US on 22-09-20'
+s=sentence.replace('UK', 'United Kingdom')
+k=s.replace('US','United Kingdom')
+v=s.replace('22','2022')
+
+
+정규표현식 : https://wikidocs.net
+
+
+import re
+
+sub = re.sub('[a-z]','match', 'c')
+sub
+
+
+
