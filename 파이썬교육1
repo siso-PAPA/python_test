@@ -147,3 +147,158 @@ sub
 
 
 
+import numpy as np
+
+arr = [[1,2,3],[4,5,6]]
+
+np_arr = np.array(arr)
+np_arr.shape
+type(np_arr)
+
+
+empty_arr = np.empty(shape=(2,3))
+ones_arr = np.ones(shape=(2,3))
+full_arr = np.full(shape=(2,3), fill_value=7)
+
+
+np_arr[0,0]
+np_arr[:,0]
+np_arr[0,2]
+np_arr[0:2,1:3]
+
+arr1 = [[1,2,3],[4,5,6],[7,8,9],[10,11,12]]
+np_arr1 =np.array(arr1)
+np_arr1[1,2].shape
+
+
+np_arr1.reshape(6,-1)   #-1은 알아서 열 정리하게
+np_arr1.reshape(1,3,4)
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import seaborn as sns
+
+
+path = r'D:\Downloads\python_Advance-main\data_set'
+data = f'{path}\국민건강보험공단_건강검진정보_20211229.CSV'
+df= pd.read_csv(data,encoding = 'cp949')
+
+df.tail(100) # 줄 100개
+df.tail()
+df.shape
+df.dtypes
+df.describe()
+df.describe(include = ['object']) #object만 추출
+df.describe(include = ['number']) #object만 추출
+
+df_n = df.set_index('성별코드')
+df_n.loc[1,['허리둘레']].mean()
+df_n.loc[1,['연령대 코드(5세단위)']].agg(['min','mean'])
+
+df_n.reset_index(inplace = True)
+df_n.head()
+
+df_n.loc[(df['시도코드']==11) & (df['연령대 코드(5세단위)']>=10)]
+df_n.loc[(df['시도코드']==11) & (df['연령대 코드(5세단위)']>=10)].shape
+
+df_n.loc[:,['시도코드','허리둘레']]
+
+### 10 minute pandas -- 설명관련 잘 나옴
+
+df.dtypes
+df.select_dtypes(include=['number']) ## 숫자만 추출
+df.drop(['기준년도'], axis=1)
+
+df_miss = df.copy()
+df_miss.isnull().sum()  # Null값이 있는지 확인 
+
+df_miss[df_miss.isnull()]
+
+df_final = df_miss.dropna().isnull().sum()
+
+df_final.to_csv('건강검진.csv', index = False)
+
+df_miss = df.copy()
+
+a = df_miss.isnull().sum()
+k =pd.DataFrame(a)
+
+df_miss['치석'].fillna(0) #결측치를 0으로 채워라
+df_miss['치석'].fillna(df_miss['치석'].mean())
+
+
+df_miss = df.dropna().copy()
+df_miss.to_csv('새로운Data.csv', encoding='cp949', index=False)
+
+
+df_miss['신장(5Cm단위)'].mean().round(2)
+
+df.agg({'감마 지티피': ['sum','min','max','median','skew']}).round(2)
+df['성별코드'].value_counts()
+df[['성별코드','흡연상태']].value_counts()
+
+df.groupby(['성별코드','흡연상태'])['감마 지티피'].mean().sort_values(ascending=False)
+
+pivot = df.pivot_table( values='감마 지티피' , index=['성별코드','흡연상태'], aggfunc=['mean','max']).round(2)
+pivot.unstack().unstack().to_clipboard()
+
+
+plt.rc('font', family="Malgun gothic")
+
+import warnings
+warnings.filterwarnings(action='ignore')  ## 경고 무시
+
+min = df['허리둘레'].describe()['75%']
+max = df['허리둘레'].describe()['25%']
+
+plt.hist(df['허리둘레'], bins=15, color='green', range=(min-10,max+10))
+plt.title('히스토그램 연습')
+plt.show()
+
+
+plt.boxplot(df['신장(5Cm단위)',df['허리둘레']])
+
+sns.displot(df['요단백'])
+sns.distplot(df['요단백'])
+
+df['성별코드'].value_counts()
+
+df1 = df.loc[df['성별코드']==1, '신장(5Cm단위)']
+df2 = df.loc[df['성별코드']==2, '신장(5Cm단위)']
+
+plt.hist(df1, bins=10, color='green', range=(100,200),  histtype='step')
+plt.hist(df2, bins=10, color='skyblue', range=(100,200), histtype='step')
+plt.show() 
+
+
+d1 = df1.mean().round(2)
+d2 = df2.mean().round(2)
+
+plt.boxplot([df1,df2], labels=['남자','여자'])
+
+
+x=df['흡연상태'].value_counts().index
+x = [ str(i) for i in x ]
+y = df['흡연상태'].value_counts().values
+
+fig, ax = plt.subplots(figsize = (4,3))
+plt.bar(x,y)
+ax.set_title('흡연상태별 인원수', fontdict={'fontsize':10, 'color':'blue', 'weight':'bold'})
+ax.set_xlabel('흡연상태', fontdict={'fontsize':8, 'color':'green', 'weight':'bold'})
+ax.set_ylabel('인원수', fontdict={'fontsize':8, 'color':'red', 'weight':'bold'}, rotation=90)
+ax.plot(x,y , marker='^', color='red')
+ax.set_xticklabels(['미흡연','금연','흡연'])
+for i,v in enumerate(y):
+    ax.text(i,v/2, str(v) , fontsize=8, color = 'w', weight='bold',horizontalalignment='center')
+
+labels = '미흡연','금연','흡연'
+
+fig, ax = plt.subplots()
+ax.pie(y, labels=labels, autopct='%.1f%%', shadow=True, explode=(0,0.2,0), startangle=90)
+ax.set_title('흡연상태별 비율(%)', fontdict={'fontsize':8, 'color':'green', 'weight':'bold'})
+plt.legend(labels, loc=(1.0, 0.5))
+plt.show()
+
+
